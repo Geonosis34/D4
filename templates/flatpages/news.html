@@ -1,0 +1,87 @@
+
+{% extends 'flatpages/default.html' %}
+
+{% load newsapp_filters %}
+
+{% block title %}
+News
+{% endblock title %}
+
+{% block content %}
+<h1>{{ post }}</h1>
+    <h2><u>Свежие новости</u></h2>
+<h3>{{ time_now|date:'d M Y' }}</h3>
+    {% if news %}
+        <table>
+            <tr>
+                <td>
+                    Название
+                </td>
+                <td>
+                    Описание
+                </td>
+                <td>
+                    Автор
+                </td>
+                <td>
+                    Дата публикации
+                </td>
+                <td>
+                    ID
+                </td>
+            </tr>
+        {% for news in news %}
+            <tr>
+                <td>
+                    <a href="{% url 'news_detail' news.id %}">{{ news.name|censor }}</a> <!-- При нажатии на имя товара в таблице нас теперь будет перекидывать на страницу с самого товара -->
+                    <a href="{% url 'news_update' news.id %}"><u>Редактировать</u></a> <!-- добавим ссылку на редактирование товара-->
+
+                    <a href="{% url 'news_delete' news.id %}"><u> Удалить </u></a>
+                    <!-- добавим ссылку на удаление товара-->
+                    {{ news.name|censor }}
+                </td>
+                <td>
+                    {{ news.description|truncatechars:50|censor }}
+                </td>
+                <td>
+                    {{ news.author }}
+                </td>
+                <td>
+                    {{ news.dateCreation }}
+                </td>
+                <td>
+                    {{ news.id }}
+                </td>
+            </tr>
+        {% endfor %}
+        </table>
+
+{% if is_paginated %}
+
+    {% if page_obj.has_previous %}
+        <a href="?page=1">First</a>
+        <a href="?page={{ page_obj.previous_page_number }}"><<<</a>
+    {% endif %}
+
+    {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+            <a>{{ num }}</a>
+        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+            <a href="?page={{ num }}">{{ num }}</a>
+        {% endif %}
+    {% endfor %}
+
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">>>></a>
+        <a href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+    {% endif %}
+
+    {% else %}
+        <h3>Новостей нет!</h3>
+    {% endif %}
+{% endif %}
+
+<a href="{% url 'news_create' %}"><u> Создать статью </u></a>
+
+{% endblock content %}
+

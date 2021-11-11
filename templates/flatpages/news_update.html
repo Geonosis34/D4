@@ -1,0 +1,59 @@
+{% extends 'flatpages/default.html' %}
+
+{% load newsapp_filters %}
+
+{% block title %}
+update
+{% endblock title %}
+
+
+{% block content %}
+<h2><u>Редактирование</u></h2>
+<table>
+            <tr>
+                <td>
+                    Название
+                </td>
+                <td>
+                    Описание
+                </td>
+                <td>
+                    Автор
+                </td>
+                <td>
+                    Дата публикации
+                </td>
+                <td>
+                    ID
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    {{ update.name|censor }}
+                </td>
+                <td>
+                    {{ update.description|truncatechars:50|censor }}
+                </td>
+                <td>
+                    {{ update.author }}
+                </td>
+                <td>
+                    {{ update.dateCreation }}
+                </td>
+                <td>
+                    {{ update.id }}
+                </td>
+            </tr>
+
+        </table>
+
+<h2><u>Редактировать статью</u></h2>
+
+<form method="POST">
+    {% csrf_token %}
+    {{ form }} <!-- Теперь нам нужна только готовая форма и кнопка -->
+    <input type="submit" value="Редактировать статью">
+</form>
+
+{% endblock content %}
